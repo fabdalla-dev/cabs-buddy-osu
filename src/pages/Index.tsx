@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BusMap from '@/components/BusMap';
 import RouteSelector from '@/components/RouteSelector';
 import StopList from '@/components/StopList';
+import WelcomeHero from '@/components/WelcomeHero';
+import InfoButton from '@/components/InfoButton';
 import { Card } from '@/components/ui/card';
 import { Bus, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,9 +11,25 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('osu-cabs-visited');
+    if (!hasVisited) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  const handleDismissWelcome = () => {
+    localStorage.setItem('osu-cabs-visited', 'true');
+    setShowWelcome(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Welcome Hero */}
+      {showWelcome && <WelcomeHero onDismiss={handleDismissWelcome} />}
+
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
@@ -26,14 +44,17 @@ const Index = () => {
               </div>
             </div>
             
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setShowSidebar(!showSidebar)}
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <InfoButton />
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setShowSidebar(!showSidebar)}
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
