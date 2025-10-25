@@ -23,8 +23,8 @@ const routes: Route[] = [
 
 const RouteSelector = ({ selectedRoute, onSelectRoute }: RouteSelectorProps) => {
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-semibold">Routes</h3>
         {selectedRoute && (
           <button
@@ -36,13 +36,13 @@ const RouteSelector = ({ selectedRoute, onSelectRoute }: RouteSelectorProps) => 
         )}
       </div>
       
-      <div className="grid gap-2">
+      <div className="grid gap-3">
         {routes.map((route) => {
           const isSelected = selectedRoute === route.id;
           return (
             <Card
               key={route.id}
-              className={`p-4 cursor-pointer transition-all hover:shadow-md ${
+              className={`p-5 cursor-pointer transition-all hover:shadow-md ${
                 isSelected ? 'ring-2 ring-primary shadow-md' : ''
               }`}
               onClick={() => onSelectRoute(isSelected ? null : route.id)}

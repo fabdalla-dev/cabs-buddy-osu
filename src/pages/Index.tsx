@@ -60,22 +60,22 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto p-4">
-        <div className="grid lg:grid-cols-[350px,1fr] gap-4">
+      <div className="container mx-auto p-6 lg:p-8">
+        <div className="grid lg:grid-cols-[380px,1fr] gap-6 lg:gap-8">
           {/* Sidebar */}
           <aside 
-            className={`space-y-4 ${
+            className={`space-y-6 ${
               showSidebar ? 'block' : 'hidden'
             } lg:block`}
           >
-            <Card className="p-4">
+            <Card className="p-6">
               <RouteSelector 
                 selectedRoute={selectedRoute}
                 onSelectRoute={setSelectedRoute}
               />
             </Card>
             
-            <Card className="p-4">
+            <Card className="p-6">
               <StopList selectedRoute={selectedRoute} />
             </Card>
           </aside>
