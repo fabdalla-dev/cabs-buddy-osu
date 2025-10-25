@@ -13,19 +13,19 @@ interface RouteSchedule {
   color: string;
 }
 
-const weekdaySchedules: RouteSchedule[] = [
-  { route: 'ER', fullName: 'East Residential', firstBus: '6:30 AM', lastBus: '12:00 AM', color: 'bg-primary' },
-  { route: 'CL', fullName: 'Campus Loop', firstBus: '7:00 AM', lastBus: '11:30 PM', color: 'bg-accent' },
-  { route: 'NS', fullName: 'North-South', firstBus: '6:45 AM', lastBus: '11:45 PM', color: 'bg-success' },
-  { route: 'WC', fullName: 'West Campus', firstBus: '7:15 AM', lastBus: '11:00 PM', color: 'bg-warning' },
-];
+// const weekdaySchedules: RouteSchedule[] = [
+//   { route: 'ER', fullName: 'East Residential', firstBus: '6:30 AM', lastBus: '12:00 AM', color: 'bg-primary' },
+//   { route: 'CL', fullName: 'Campus Loop', firstBus: '7:00 AM', lastBus: '11:30 PM', color: 'bg-accent' },
+//   { route: 'NS', fullName: 'North-South', firstBus: '6:45 AM', lastBus: '11:45 PM', color: 'bg-success' },
+//   { route: 'WC', fullName: 'West Campus', firstBus: '7:15 AM', lastBus: '11:00 PM', color: 'bg-warning' },
+// ];
 
-const weekendSchedules: RouteSchedule[] = [
-  { route: 'ER', fullName: 'East Residential', firstBus: '8:00 AM', lastBus: '10:00 PM', color: 'bg-primary' },
-  { route: 'CL', fullName: 'Campus Loop', firstBus: '9:00 AM', lastBus: '9:00 PM', color: 'bg-accent' },
-  { route: 'NS', fullName: 'North-South', firstBus: '8:30 AM', lastBus: '9:30 PM', color: 'bg-success' },
-  { route: 'WC', fullName: 'West Campus', firstBus: 'Not Operating', lastBus: 'Not Operating', color: 'bg-warning' },
-];
+// const weekendSchedules: RouteSchedule[] = [
+//   { route: 'ER', fullName: 'East Residential', firstBus: '8:00 AM', lastBus: '10:00 PM', color: 'bg-primary' },
+//   { route: 'CL', fullName: 'Campus Loop', firstBus: '9:00 AM', lastBus: '9:00 PM', color: 'bg-accent' },
+//   { route: 'NS', fullName: 'North-South', firstBus: '8:30 AM', lastBus: '9:30 PM', color: 'bg-success' },
+//   { route: 'WC', fullName: 'West Campus', firstBus: 'Not Operating', lastBus: 'Not Operating', color: 'bg-warning' },
+// ];
 
 const OperatingHours = () => {
   return (

@@ -14,18 +14,22 @@ interface RouteSelectorProps {
   onSelectRoute: (routeId: string | null) => void;
 }
 
+// Real OSU CABS route codes
+// These are the actual route IDs used by the OSU bus API
 const routes: Route[] = [
-  { id: 'ER', name: 'East Residential', color: 'bg-primary', status: 'active' },
-  { id: 'CL', name: 'Campus Loop', color: 'bg-accent', status: 'active' },
-  { id: 'NS', name: 'North-South', color: 'bg-success', status: 'active' },
-  { id: 'WC', name: 'West Campus', color: 'bg-warning', status: 'delayed' },
+  { id: 'CL', name: 'Campus Loop', color: 'bg-blue-500', status: 'active' },
+  { id: 'ER', name: 'East Residential', color: 'bg-green-500', status: 'active' },
+  { id: 'HS', name: 'Health Sciences', color: 'bg-purple-500', status: 'active' },
+  { id: 'NE', name: 'North Express', color: 'bg-red-500', status: 'active' },
+  { id: 'SE', name: 'South Express', color: 'bg-yellow-500', status: 'active' },
+  { id: 'WE', name: 'West Express', color: 'bg-orange-500', status: 'active' },
 ];
 
 const RouteSelector = ({ selectedRoute, onSelectRoute }: RouteSelectorProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-semibold">Routes</h3>
+        <h3 className="text-lg font-semibold">CABS Routes</h3>
         {selectedRoute && (
           <button
             onClick={() => onSelectRoute(null)}
