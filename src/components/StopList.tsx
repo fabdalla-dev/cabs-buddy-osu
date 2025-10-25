@@ -14,74 +14,81 @@ interface StopListProps {
   selectedRoute: string | null;
 }
 
-const mockStops: Stop[] = [
-  {
-    id: 'stop-1',
-    name: 'Ohio Union',
-    address: '1739 N High St',
-    nextBus: 2,
-    following: [12, 25]
+const mockArrivals = [
+  { 
+    id: 1, 
+    route: 'CABS East', 
+    stop: 'Ohio Union', 
+    nextBus: '10:30 AM',
+    followingBus: '10:45 AM',
   },
-  {
-    id: 'stop-2',
-    name: 'Towers',
-    address: '2100 Neil Ave',
-    nextBus: 5,
-    following: [18, 31]
+  { 
+    id: 2, 
+    route: 'CABS West', 
+    stop: 'Ohio Union', 
+    nextBus: '10:35 AM',
+    followingBus: '10:50 AM',
   },
-  {
-    id: 'stop-3',
-    name: 'RPAC',
-    address: '337 Annie & John Glenn Ave',
-    nextBus: 8,
-    following: [21, 34]
+  { 
+    id: 3, 
+    route: 'CABS North', 
+    stop: 'Thompson Library', 
+    nextBus: '10:32 AM',
+    followingBus: '10:47 AM',
   },
-  {
-    id: 'stop-4',
-    name: 'Gateway',
-    address: '1125 Kinnear Rd',
-    nextBus: 15,
-    following: [28, 41]
+  { 
+    id: 4, 
+    route: 'CABS East', 
+    stop: 'RPAC', 
+    nextBus: '10:40 AM',
+    followingBus: '10:55 AM',
+  },
+  { 
+    id: 5, 
+    route: 'CABS South', 
+    stop: 'Morrill Tower', 
+    nextBus: '10:37 AM',
+    followingBus: '10:52 AM',
   },
 ];
 
 const StopList = ({ selectedRoute }: StopListProps) => {
+  const filteredArrivals = selectedRoute
+    ? mockArrivals.filter((arrival) => arrival.route === selectedRoute)
+    : mockArrivals;
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold mb-2">Nearby Stops</h3>
-      
-      <div className="space-y-3">
-        {mockStops.map((stop) => (
-          <Card key={stop.id} className="p-5 hover:shadow-md transition-all cursor-pointer">
+      {filteredArrivals.map((arrival) => (
+        <Card key={arrival.id} className="p-6 hover:shadow-md transition-shadow">
+          <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
-                <MapPin className="w-5 h-5 text-white" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold truncate">{stop.name}</h4>
-                <p className="text-sm text-muted-foreground truncate">{stop.address}</p>
-                
-                <div className="mt-3 flex items-center gap-2 flex-wrap">
-                  <Badge 
-                    variant={stop.nextBus <= 3 ? 'default' : 'secondary'}
-                    className="flex items-center gap-1"
-                  >
-                    <Clock className="w-3 h-3" />
-                    {stop.nextBus} min
-                  </Badge>
-                  
-                  {stop.following.map((time, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
-                      {time} min
-                    </Badge>
-                  ))}
+              <div className="flex-shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-lg">🚌</span>
                 </div>
               </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg mb-1">{arrival.route}</h3>
+                <p className="text-muted-foreground text-sm flex items-center gap-1">
+                  <span>📍</span>
+                  {arrival.stop}
+                </p>
+              </div>
             </div>
-          </Card>
-        ))}
-      </div>
+            <div className="pl-[52px] space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">⏰ Next bus:</span>
+                <span className="text-lg font-bold text-primary">{arrival.nextBus}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">🕐 Following bus:</span>
+                <span className="text-base font-semibold text-foreground">{arrival.followingBus}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      ))}
     </div>
   );
 };

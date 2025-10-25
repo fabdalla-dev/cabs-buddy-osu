@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import RoutesPage from "./pages/Routes";
 import OperatingHours from "./pages/OperatingHours";
+import Chatbot from "./pages/Chatbot";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -25,11 +26,12 @@ function App() {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/routes" element={<RoutesPage />} />
-            <Route path="/operating-hours" element={<OperatingHours />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Index />} />
+          <Route path="/routes" element={<RoutesPage />} />
+          <Route path="/operating-hours" element={<OperatingHours />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

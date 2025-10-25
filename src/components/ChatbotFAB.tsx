@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MessageCircle, X, Send, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const ChatbotFAB = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'bot'; text: string }>>([
@@ -92,6 +94,21 @@ const ChatbotFAB = () => {
                 {suggestion}
               </Button>
             ))}
+          </div>
+
+          {/* Expand Button */}
+          <div className="px-4 pb-3">
+            <Button 
+              variant="secondary" 
+              className="w-full"
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/chatbot');
+              }}
+            >
+              <Maximize2 className="mr-2 h-4 w-4" />
+              Expand to Full Chat
+            </Button>
           </div>
 
           {/* Input */}
