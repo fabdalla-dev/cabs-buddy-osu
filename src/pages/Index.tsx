@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import Navigation from '@/components/Navigation';
+import ChatbotFAB from '@/components/ChatbotFAB';
 import BusMap from '@/components/BusMap';
-import RouteSelector from '@/components/RouteSelector';
 import StopList from '@/components/StopList';
 import WelcomeHero from '@/components/WelcomeHero';
-import InfoButton from '@/components/InfoButton';
 import { Card } from '@/components/ui/card';
-import { Bus, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
-  const [showSidebar, setShowSidebar] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
@@ -30,64 +29,41 @@ const Index = () => {
       {/* Welcome Hero */}
       {showWelcome && <WelcomeHero onDismiss={handleDismissWelcome} />}
 
-      {/* Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Bus className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">OSU CABS</h1>
-                <p className="text-sm text-muted-foreground">Real-time Bus Tracking</p>
-              </div>
+      <Navigation />
+      
+      <main className="container mx-auto p-6 lg:p-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4">Navigate Campus with Ease</h1>
+          <p className="text-xl text-muted-foreground mb-6">
+            See real-time bus routes, arrivals, and schedules — all in one place.
+          </p>
+          <NavLink to="/routes">
+            <Button size="lg" className="shadow-lg">
+              View All Routes
+            </Button>
+          </NavLink>
+        </div>
+
+        {/* Two Column Layout */}
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+          {/* Left: Map View */}
+          <Card className="overflow-hidden h-[600px]">
+            <BusMap selectedRoute={selectedRoute} />
+          </Card>
+
+          {/* Right: Live Arrivals */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Live Arrivals</h2>
+              <p className="text-muted-foreground">Real-time bus arrival information</p>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <InfoButton />
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setShowSidebar(!showSidebar)}
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-            </div>
+            <StopList selectedRoute={selectedRoute} />
           </div>
         </div>
-      </header>
+      </main>
 
-      {/* Main Content */}
-      <div className="container mx-auto p-6 lg:p-8">
-        <div className="grid lg:grid-cols-[380px,1fr] gap-6 lg:gap-8">
-          {/* Sidebar */}
-          <aside 
-            className={`space-y-6 ${
-              showSidebar ? 'block' : 'hidden'
-            } lg:block`}
-          >
-            <Card className="p-6">
-              <RouteSelector 
-                selectedRoute={selectedRoute}
-                onSelectRoute={setSelectedRoute}
-              />
-            </Card>
-            
-            <Card className="p-6">
-              <StopList selectedRoute={selectedRoute} />
-            </Card>
-          </aside>
-
-          {/* Map */}
-          <main>
-            <Card className="overflow-hidden h-[calc(100vh-180px)]">
-              <BusMap selectedRoute={selectedRoute} />
-            </Card>
-          </main>
-        </div>
-      </div>
+      <ChatbotFAB />
     </div>
   );
 };
