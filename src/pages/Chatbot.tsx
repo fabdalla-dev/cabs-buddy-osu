@@ -4,17 +4,26 @@ import { ArrowLeft, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
+
+type Message = {
+  id: number;
+  text: string;
+  sender: 'user' | 'bot';
+};
 
 const Chatbot = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       text: "Hi! I'm the CampusFlow Assistant. How can I help you today?",
       sender: 'bot',
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const suggestions = [
     "Next bus to Union",
@@ -23,23 +32,112 @@ const Chatbot = () => {
     "Operating hours for West route",
   ];
 
-  const handleSend = () => {
-    if (!message.trim()) return;
+  const handleSend = async () => {
+    if (!message.trim() || isLoading) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       id: messages.length + 1,
       text: message,
       sender: 'user',
     };
 
-    const botResponse = {
-      id: messages.length + 2,
-      text: "I'm a demo chatbot. In a real implementation, I would provide information about campus buses based on your question!",
-      sender: 'bot',
-    };
-
-    setMessages([...messages, userMessage, botResponse]);
+    setMessages(prev => [...prev, userMessage]);
     setMessage('');
+    setIsLoading(true);
+
+    try {
+      const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+      const response = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(m => ({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text,
+          })),
+        }),
+      });
+
+      if (!response.ok || !response.body) {
+        if (response.status === 429) {
+          toast({
+            title: "Rate limit exceeded",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+          return;
+        }
+        if (response.status === 402) {
+          toast({
+            title: "Payment required",
+            description: "Please add funds to your Lovable AI workspace.",
+            variant: "destructive",
+          });
+          return;
+        }
+        throw new Error('Failed to start stream');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = '';
+      let streamDone = false;
+      let assistantText = '';
+
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') {
+            streamDone = true;
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantText += content;
+              setMessages(prev => {
+                const last = prev[prev.length - 1];
+                if (last?.sender === 'bot') {
+                  return prev.map((m, i) =>
+                    i === prev.length - 1 ? { ...m, text: assistantText } : m
+                  );
+                }
+                return [...prev, { id: prev.length + 1, text: assistantText, sender: 'bot' }];
+              });
+            }
+          } catch {
+            textBuffer = line + '\n' + textBuffer;
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get response. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSuggestion = (suggestion: string) => {
@@ -111,7 +209,7 @@ const Chatbot = () => {
               placeholder="Ask about routes, stops, or arrivals…"
               className="flex-1"
             />
-            <Button onClick={handleSend} size="icon">
+            <Button onClick={handleSend} size="icon" disabled={isLoading}>
               <Send className="h-4 w-4" />
             </Button>
           </div>
