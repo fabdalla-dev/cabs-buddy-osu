@@ -36,10 +36,10 @@ const Routes = () => {
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-[380px,1fr] gap-6 lg:gap-8">
+        <div className="grid lg:grid-cols-[380px,1fr] gap-6 lg:gap-8 sticky top-[72px] z-40">
           {/* Left: Route List */}
           <aside>
-            <Card className="p-6">
+            <Card className="p-6 max-h-[calc(100vh-96px)] overflow-y-auto">
               <RouteSelector 
                 selectedRoute={selectedRoute}
                 onSelectRoute={setSelectedRoute}
@@ -48,7 +48,7 @@ const Routes = () => {
           </aside>
 
           {/* Right: Map */}
-          <Card className="overflow-hidden h-[calc(100vh-280px)]">
+          <Card className="overflow-hidden h-[calc(100vh-96px)]">
             <BusMap selectedRoute={selectedRoute} />
           </Card>
         </div>
